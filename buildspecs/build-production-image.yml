@@ -5,7 +5,7 @@ phases:
     runtime-versions:
       docker: 18
     commands:
-      - yum install jq -q -y
+      - apt-get install jq -qq -y
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
