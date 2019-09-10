@@ -18,7 +18,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - API_IMAGE_URI=$(jq -r '.ImageURI' $CODEBUILD_SRC_DIR_ApiProductionImageDetails/imageDetail.json)
+      - API_IMAGE_URI=$(jq -r '.ImageURI' $CODEBUILD_SRC_DIR_ApiProductionImageDetails/imagedefinitions.json)
       - docker build --target nginx-prod -t $REPOSITORY_URI:latest --build-arg API_IMAGE_URI=$API_IMAGE_URI .
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
@@ -27,6 +27,6 @@ phases:
       - echo Pushing the Docker image...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '{"ImageURI":"%s"}' $REPOSITORY_URI:$IMAGE_TAG > imageDetail.json
+      - printf '[{"name":"api","imageUri":"%s"}{"name":"nginx","imageUri":"%s"}]' $API_IMAGE_URI $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 artifacts:
-  files: imageDetail.json
+  files: imagedefinitions.json
