@@ -4,8 +4,6 @@ phases:
   install:
     runtime-versions:
       docker: 18
-    commands:
-      - apt-get install jq -qq -y
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
@@ -18,8 +16,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - API_IMAGE_URI=$(jq -r '.[0].imageUri' $CODEBUILD_SRC_DIR_ApiProductionImageDetails/imagedefinitions.json)
-      - docker build --target nginx-prod -t $REPOSITORY_URI:latest --build-arg API_IMAGE_URI=$API_IMAGE_URI .
+      - docker build --target nginx-prod -t $REPOSITORY_URI:latest
       - docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
@@ -27,6 +24,3 @@ phases:
       - echo Pushing the Docker image...
       - docker push $REPOSITORY_URI:latest
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - printf '[{"name":"Api","imageUri":"%s"}, {"name":"Nginx","imageUri":"%s"}]' $API_IMAGE_URI $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
-artifacts:
-  files: imagedefinitions.json
