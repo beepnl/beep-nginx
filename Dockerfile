@@ -1,4 +1,4 @@
-ARG API_IMAGE_URI=038855593698.dkr.ecr.eu-west-1.amazonaws.com/beep-api-prod:latest
+ARG API_IMAGE_URI=038855593698.dkr.ecr.eu-west-1.amazonaws.com/beep-api-production:latest
 
 FROM nginx:1.17-alpine AS nginx-dev
 
